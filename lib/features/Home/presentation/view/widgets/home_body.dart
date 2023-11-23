@@ -19,11 +19,45 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  String urlMyImage = "";
-  String userMyName = "";
-  String userMyAbout = "";
+  String urlMyImage =
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+  String userMyName = "User";
+  String userMyAbout = "I'm good";
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
   bool isLoadingLogOut = false;
+
+  Future<void> readDocument() async {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection("users") // Replace with your collection name
+          .doc("uid") // Replace with your document ID
+          .get();
+
+      if (documentSnapshot.exists) {
+        // Document exists, you can access its data
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+
+        urlMyImage = data["UserImage"];
+        userMyName = data["UserName"];
+        userMyAbout = data["AboutMe"];
+        setState(() {});
+        print("Document data: $data");
+      } else {
+        // Document does not exist
+        print("Document does not exist");
+      }
+    } catch (e) {
+      print("Error reading document: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    readDocument();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +90,43 @@ class _HomeBodyState extends State<HomeBody> {
             SizedBox(
               height: 50.h,
             ),
-            HomeAppBar(
-              isLoading: isLoadingLogOut,
-              userAbout: userMyAbout,
-              userName: userMyName,
-              userImage: urlMyImage,
+            FutureBuilder(
+              future: readDocument(),
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasError) {
+                  print("error: errrrrrrrrrrrrrrrrrrrrrrrrrrror");
+                  return HomeAppBar(
+                    isLoading: isLoadingLogOut,
+                    userAbout: "Error",
+                    userName: "Flutter Developer",
+                    userImage:
+                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                  );
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(
+                    color: AppColor.kBlue,
+                  );
+                }
+
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return HomeAppBar(
+                    isLoading: isLoadingLogOut,
+                    userAbout: userMyAbout,
+                    userName: userMyName,
+                    userImage: urlMyImage,
+                  );
+                }
+
+                return HomeAppBar(
+                  isLoading: isLoadingLogOut,
+                  userAbout: "None",
+                  userName: "Flutter Developer",
+                  userImage:
+                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                );
+              },
             ),
             SizedBox(
               height: 30.h,
