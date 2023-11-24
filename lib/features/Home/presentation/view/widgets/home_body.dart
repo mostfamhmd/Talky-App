@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:chat_app/core/Utils/colors.dart';
+import 'package:chat_app/core/Utils/styles.dart';
 import 'package:chat_app/features/Auth/presentation/view/auth.dart';
 import 'package:chat_app/features/Home/presentation/manager/Log%20Out/log_out_cubit.dart';
 import 'package:chat_app/features/Home/presentation/view/widgets/home_app_bar.dart';
@@ -43,14 +44,10 @@ class _HomeBodyState extends State<HomeBody> {
         userMyName = data["UserName"];
         userMyAbout = data["AboutMe"];
         setState(() {});
-        print("Document data: $data");
       } else {
         // Document does not exist
-        print("Document does not exist");
       }
-    } catch (e) {
-      print("Error reading document: $e");
-    }
+    } catch (e) {}
   }
 
   @override
@@ -94,14 +91,12 @@ class _HomeBodyState extends State<HomeBody> {
               future: readDocument(),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasError) {
-                  print("error: errrrrrrrrrrrrrrrrrrrrrrrrrrror");
-                  return HomeAppBar(
-                    isLoading: isLoadingLogOut,
-                    userAbout: "Error",
-                    userName: "Flutter Developer",
-                    userImage:
-                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-                  );
+                  return Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Error",
+                        style: AppStyles.kStyleBlue16,
+                      ));
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -169,9 +164,11 @@ class _HomeBodyState extends State<HomeBody> {
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
     String userName = data["UserName"] ?? "";
     String userAbout = data["AboutMe"] ?? "";
+    final userId = data["uid"] ?? "";
 
     if (firebaseAuth.currentUser!.email != data["email"]) {
       return UserListView(
+        userId: userId,
         urlImage: urlImage,
         userName: userName,
         userAbout: userAbout,
@@ -181,7 +178,7 @@ class _HomeBodyState extends State<HomeBody> {
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
       userMyName = data["UserName"] ?? "";
       userMyAbout = data["AboutMe"] ?? "";
-      return Center();
+      return const Center();
     }
   }
 }

@@ -30,6 +30,7 @@ environment:
 dependencies:
   cached_firestorage: ^0.1.8
   cached_network_image: ^3.3.0
+  chat_bubbles: ^1.5.0
   cloud_firestore: ^4.13.2
   cupertino_icons: ^1.0.2
   file_picker: ^6.1.1
@@ -44,6 +45,7 @@ dependencies:
   go_router: ^12.1.1
   image_picker: ^1.0.4
   path: ^1.8.3
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
