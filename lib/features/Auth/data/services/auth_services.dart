@@ -32,7 +32,7 @@ class AuthServices {
       "email": email,
       "AboutMe": aboutMe,
       "UserImage": userImage,
-    });
+    }, SetOptions(merge: false));
     return userCredential;
   }
 

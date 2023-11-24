@@ -3,7 +3,9 @@ import 'package:chat_app/core/Utils/colors.dart';
 import 'package:chat_app/core/Utils/styles.dart';
 import 'package:chat_app/features/Auth/presentation/view/widgets/Custom_btn.dart';
 import 'package:chat_app/features/Auth/presentation/view/widgets/email_field.dart';
+import 'package:chat_app/features/Home/presentation/view/home_view.dart';
 import 'package:chat_app/features/profile/presentation/manager/Edit%20Profile/edit_profile_cubit.dart';
+import 'package:chat_app/features/profile/presentation/view/widgets/profile_app_bar.dart';
 import 'package:chat_app/features/profile/presentation/view/widgets/profile_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
-
-import '../../../../Auth/presentation/view/widgets/User Info Widgets/user_info_app_bar.dart';
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody(
@@ -31,8 +31,8 @@ class _ProfileBodyState extends State<ProfileBody> {
   String? urlImage;
 
   bool isLoading = false;
-  String aboutMe = "";
-  String myName = "";
+  String? aboutMe;
+  String? myName;
   File? _photo;
 
   @override
@@ -45,6 +45,12 @@ class _ProfileBodyState extends State<ProfileBody> {
           });
         } else if (state is EditProfileSuccess) {
           Navigator.pop(context);
+          Navigator.push<void>(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => const HomeView(),
+            ),
+          );
         } else if (state is EditProfileFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: AppColor.kBlue,
@@ -66,9 +72,7 @@ class _ProfileBodyState extends State<ProfileBody> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Spacer(),
-            const UserInfoAppBar(
-              userName: "",
-            ),
+            const ProfileAppBar(),
             const Spacer(),
             ProfileImage(
               image: urlImage != null ? urlImage! : widget.myimage,
@@ -90,8 +94,6 @@ class _ProfileBodyState extends State<ProfileBody> {
               onChanged: (name) {
                 if (name.isNotEmpty) {
                   myName = name;
-                } else {
-                  myName = widget.myname;
                 }
                 setState(() {});
               },
@@ -105,8 +107,6 @@ class _ProfileBodyState extends State<ProfileBody> {
               onChanged: (about) {
                 if (about.isNotEmpty) {
                   aboutMe = about;
-                } else {
-                  aboutMe = widget.myabout;
                 }
                 setState(() {});
               },
@@ -117,9 +117,9 @@ class _ProfileBodyState extends State<ProfileBody> {
             InkWell(
               onTap: () async {
                 await BlocProvider.of<EditProfileCubit>(context).editProfile(
-                    aboutMe: aboutMe,
+                    aboutMe: aboutMe ?? widget.myabout,
                     image: urlImage != null ? urlImage! : widget.myimage,
-                    userName: '');
+                    userName: myName ?? widget.myname);
                 setState(() {});
               },
               child: isLoading == true
