@@ -63,8 +63,7 @@ class _MessagesListState extends State<MessagesList> {
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             return ChatBubble(
-                document: snapshot.data!.docs[index],
-                isTail: index == snapshot.data!.docs.length - 1);
+                document: snapshot.data!.docs[index], isTail: index == 0);
           },
         );
       },
