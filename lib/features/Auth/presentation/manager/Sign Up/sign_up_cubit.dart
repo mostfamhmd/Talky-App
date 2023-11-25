@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/Auth/data/services/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 
 part 'sign_up_state.dart';
@@ -15,10 +16,12 @@ class SignUpCubit extends Cubit<SignUpState> {
       required String userName,
       required String aboutMe,
       required String userImage}) async {
+    String? userToken;
+    userToken = await FirebaseMessaging.instance.getToken();
     emit(SignUpLoading());
     try {
       await authServices.signUpWithEmailAndPassword(
-          email, password, userName, userImage, aboutMe);
+          email, password, userName, userImage, aboutMe, userToken!);
       emit(SignUpSuccess());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

@@ -12,11 +12,13 @@ class UserListView extends StatelessWidget {
     required this.userName,
     required this.userAbout,
     required this.userId,
+    required this.userToken,
   });
   final String urlImage;
   final String userName;
   final String userAbout;
-  final dynamic userId;
+  final String userId;
+  final String userToken;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -29,6 +31,7 @@ class UserListView extends StatelessWidget {
               friendImage: urlImage,
               friendAbout: userAbout,
               friendId: userId,
+              friendToken: userToken,
             ),
           ),
         );

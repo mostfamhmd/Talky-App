@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'package:chat_app/core/Services/send_notifications.dart';
 import 'package:chat_app/features/Chat/data/services/chat_services.dart';
 import 'package:chat_app/features/Chat/presentation/view/widgets/chat_app_bar.dart';
 import 'package:chat_app/features/Chat/presentation/view/widgets/message_input.dart';
@@ -8,17 +9,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatBody extends StatefulWidget {
-  const ChatBody(
-      {super.key,
-      required this.friendName,
-      required this.friendImage,
-      required this.friendAbout,
-      this.friendId});
+  const ChatBody({
+    super.key,
+    required this.friendName,
+    required this.friendImage,
+    required this.friendAbout,
+    required this.friendId,
+    required this.friendToken,
+  });
   final String friendName;
   final String friendImage;
   final String friendAbout;
-  final dynamic friendId;
-
+  final String friendId;
+  final String friendToken;
   @override
   State<ChatBody> createState() => _ChatBodyState();
 }
@@ -27,7 +30,7 @@ class _ChatBodyState extends State<ChatBody> {
   TextEditingController controllerMessage = TextEditingController();
   ChatService chatService = ChatService();
   String myId = FirebaseAuth.instance.currentUser!.uid;
-
+  MyNotification myNotification = MyNotification();
   void sendMessage() async {
     if (controllerMessage.text.isNotEmpty) {
       await chatService.sendMessage(
@@ -64,6 +67,8 @@ class _ChatBodyState extends State<ChatBody> {
                 await chatService.sendMessage(
                     receiverId: widget.friendId,
                     message: controllerMessage.text);
+                myNotification.sendNotification(widget.friendToken,
+                    widget.friendName, controllerMessage.text);
                 controllerMessage.clear();
               }
             },

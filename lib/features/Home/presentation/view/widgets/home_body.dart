@@ -24,6 +24,7 @@ class _HomeBodyState extends State<HomeBody> {
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
   String userMyName = "User";
   String userMyAbout = "I'm good";
+  String userMyToken = "";
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   bool isLoadingLogOut = false;
@@ -43,6 +44,7 @@ class _HomeBodyState extends State<HomeBody> {
         urlMyImage = data["UserImage"];
         userMyName = data["UserName"];
         userMyAbout = data["AboutMe"];
+        userMyToken = data["UserToken"];
         setState(() {});
       } else {
         // Document does not exist
@@ -164,7 +166,8 @@ class _HomeBodyState extends State<HomeBody> {
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
     String userName = data["UserName"] ?? "";
     String userAbout = data["AboutMe"] ?? "";
-    final userId = data["uid"] ?? "";
+    String userId = data["uid"] ?? "";
+    String userToken = data["UserToken"] ?? "";
 
     if (firebaseAuth.currentUser!.email != data["email"]) {
       return UserListView(
@@ -172,12 +175,14 @@ class _HomeBodyState extends State<HomeBody> {
         urlImage: urlImage,
         userName: userName,
         userAbout: userAbout,
+        userToken: userToken,
       );
     } else {
       urlMyImage = data["UserImage"] ??
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
       userMyName = data["UserName"] ?? "";
       userMyAbout = data["AboutMe"] ?? "";
+      userMyToken = data["UserToken"] ?? "";
       return const Center();
     }
   }

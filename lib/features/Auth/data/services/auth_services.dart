@@ -20,7 +20,8 @@ class AuthServices {
       String password,
       String userName,
       String userImage,
-      String aboutMe) async {
+      String aboutMe,
+      String userToken) async {
     UserCredential userCredential = await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     await _firebaseFirestore
@@ -32,6 +33,7 @@ class AuthServices {
       "email": email,
       "AboutMe": aboutMe,
       "UserImage": userImage,
+      "UserToken": userToken,
     }, SetOptions(merge: false));
     return userCredential;
   }
