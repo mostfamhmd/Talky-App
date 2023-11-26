@@ -1,6 +1,9 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 part 'edit_profile_state.dart';
@@ -19,7 +22,9 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       emit(EditProfileSuccess());
     } catch (e) {
       emit(EditProfileFailure(errorMessage: e.toString()));
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:chat_app/features/Home/presentation/view/widgets/home_app_bar.da
 import 'package:chat_app/features/Home/presentation/view/widgets/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +19,8 @@ class HomeBody extends StatefulWidget {
   @override
   State<HomeBody> createState() => _HomeBodyState();
 }
+
+String myName = "";
 
 class _HomeBodyState extends State<HomeBody> {
   String urlMyImage =
@@ -49,7 +52,11 @@ class _HomeBodyState extends State<HomeBody> {
       } else {
         // Document does not exist
       }
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error: $e");
+      }
+    }
   }
 
   @override
@@ -183,6 +190,7 @@ class _HomeBodyState extends State<HomeBody> {
       userMyName = data["UserName"] ?? "";
       userMyAbout = data["AboutMe"] ?? "";
       userMyToken = data["UserToken"] ?? "";
+      myName = data["UserName"] ?? "";
       return const Center();
     }
   }

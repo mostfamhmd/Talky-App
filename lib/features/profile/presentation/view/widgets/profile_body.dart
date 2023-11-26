@@ -8,6 +8,7 @@ import 'package:chat_app/features/profile/presentation/manager/Edit%20Profile/ed
 import 'package:chat_app/features/profile/presentation/view/widgets/profile_app_bar.dart';
 import 'package:chat_app/features/profile/presentation/view/widgets/profile_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -211,7 +212,9 @@ class _ProfileBodyState extends State<ProfileBody> {
         uploadFile();
         setState(() {});
       } else {
-        print('No image selected.');
+        if (kDebugMode) {
+          print('No image selected.');
+        }
       }
     });
   }
@@ -229,7 +232,9 @@ class _ProfileBodyState extends State<ProfileBody> {
         urlImage = url;
       });
     } catch (e) {
-      print('Error occurred while uploading: $e');
+      if (kDebugMode) {
+        print('Error occurred while uploading: $e');
+      }
     }
   }
 }

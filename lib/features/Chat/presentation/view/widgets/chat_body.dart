@@ -4,6 +4,7 @@ import 'package:chat_app/features/Chat/data/services/chat_services.dart';
 import 'package:chat_app/features/Chat/presentation/view/widgets/chat_app_bar.dart';
 import 'package:chat_app/features/Chat/presentation/view/widgets/message_input.dart';
 import 'package:chat_app/features/Chat/presentation/view/widgets/message_list.dart';
+import 'package:chat_app/features/Home/presentation/view/widgets/home_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -67,8 +68,8 @@ class _ChatBodyState extends State<ChatBody> {
                 await chatService.sendMessage(
                     receiverId: widget.friendId,
                     message: controllerMessage.text);
-                myNotification.sendNotification(widget.friendToken,
-                    widget.friendName, controllerMessage.text);
+                myNotification.sendNotification(
+                    widget.friendToken, myName, controllerMessage.text);
                 controllerMessage.clear();
               }
             },

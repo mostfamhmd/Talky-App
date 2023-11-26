@@ -25,17 +25,4 @@ class ChatService extends ChangeNotifier {
         .collection("-")
         .add(newMessage.toMap());
   }
-
-  Stream<QuerySnapshot> getMessages({required String receiverId}) {
-    List<String> ids = [senderId, receiverId];
-    ids.sort();
-    String chatRoomId = ids.join("_");
-
-    return FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chatRoomId)
-        .collection("-")
-        .orderBy("time stemp", descending: false)
-        .snapshots();
-  }
 }

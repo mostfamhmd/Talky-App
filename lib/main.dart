@@ -1,6 +1,8 @@
 import 'package:chat_app/core/Utils/colors.dart';
 import 'package:chat_app/core/Utils/routes.dart';
 import 'package:chat_app/firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -8,9 +10,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> notificationBackgroundHandler(RemoteMessage message) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging.onBackgroundMessage(notificationBackgroundHandler);
   if (kDebugMode) {
     print(message.messageId);
   }
+
+  FirebaseFirestore.instance
+      .collection("Notifications")
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection("myNotifications")
+      .add({
+    "Name": message.notification!.title,
+    "Body": message.notification!.body,
+  });
 }
 
 void main() async {

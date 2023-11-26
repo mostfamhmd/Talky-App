@@ -10,6 +10,7 @@ import 'package:chat_app/core/Utils/styles.dart';
 import 'package:chat_app/features/Auth/presentation/view/widgets/Custom_btn.dart';
 import 'package:chat_app/features/Auth/presentation/view/widgets/User%20Info%20Widgets/user_info_app_bar.dart';
 import 'package:chat_app/features/profile/presentation/view/widgets/profile_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -210,7 +211,9 @@ class _UserInfoBodyState extends State<UserInfoBody> {
         _photo = File(profPic.path);
         uploadFile();
       } else {
-        print('No image selected.');
+        if (kDebugMode) {
+          print('No image selected.');
+        }
       }
     });
   }
@@ -228,7 +231,9 @@ class _UserInfoBodyState extends State<UserInfoBody> {
         urlImage = url;
       });
     } catch (e) {
-      print('Error occurred while uploading: $e');
+      if (kDebugMode) {
+        print('Error occurred while uploading: $e');
+      }
     }
   }
 }

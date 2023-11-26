@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -10,14 +12,16 @@ class AboutMeCubit extends Cubit<AboutMeState> {
   aboutMe({required String aboutMe, required String image}) {
     emit(AboutMeLoading());
     try {
-       FirebaseFirestore.instance.collection("users").doc("uid").update({
+      FirebaseFirestore.instance.collection("users").doc("uid").update({
         "AboutMe": aboutMe,
         "UserImage": image,
       });
       emit(AboutMeSuccess());
     } catch (e) {
       emit(AboutMeFailure(errorMessage: e.toString()));
-      print("${e.toString()}");
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
   }
 }

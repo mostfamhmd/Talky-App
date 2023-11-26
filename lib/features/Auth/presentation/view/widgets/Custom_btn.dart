@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:chat_app/core/Utils/colors.dart';
 import 'package:chat_app/core/Utils/styles.dart';
 import 'package:flutter/material.dart';
