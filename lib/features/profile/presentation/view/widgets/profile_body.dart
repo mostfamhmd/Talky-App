@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:chat_app/core/Utils/colors.dart';
 import 'package:chat_app/core/Utils/styles.dart';
+import 'package:chat_app/features/Auth/presentation/view/auth.dart';
 import 'package:chat_app/features/Auth/presentation/view/widgets/Custom_btn.dart';
 import 'package:chat_app/features/Auth/presentation/view/widgets/email_field.dart';
+import 'package:chat_app/features/Home/presentation/manager/Log%20Out/log_out_cubit.dart';
 import 'package:chat_app/features/Home/presentation/view/home_view.dart';
 import 'package:chat_app/features/profile/presentation/manager/Edit%20Profile/edit_profile_cubit.dart';
 import 'package:chat_app/features/profile/presentation/view/widgets/profile_app_bar.dart';
@@ -35,7 +37,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   String? aboutMe;
   String? myName;
   File? _photo;
-
+  bool isLoadingLogOut = false;
   @override
   Widget build(BuildContext context) {
     return BlocListener<EditProfileCubit, EditProfileState>(
@@ -67,79 +69,104 @@ class _ProfileBodyState extends State<ProfileBody> {
         }
         setState(() {});
       },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Spacer(),
-            const ProfileAppBar(),
-            const Spacer(),
-            ProfileImage(
-              image: urlImage != null ? urlImage! : widget.myimage,
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            TextButton(
-              onPressed: () => showImagePickerOption(context),
-              child: Text(
-                "Edit",
-                style: AppStyles.kStyleBlue16,
+      child: BlocListener<LogOutCubit, LogOutState>(
+        listener: (context, state) {
+          if (state is LogOutLoading) {
+            isLoadingLogOut = true;
+          } else if (state is LogOutSuccess) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const AuthView(),
               ),
-            ),
-            const Spacer(),
-            EmailField(
-              controller: controllerAboutMe,
-              hint: widget.myname,
-              onChanged: (name) {
-                if (name.isNotEmpty) {
-                  myName = name;
-                }
-                setState(() {});
-              },
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            EmailField(
-              controller: controllerName,
-              hint: widget.myabout,
-              onChanged: (about) {
-                if (about.isNotEmpty) {
-                  aboutMe = about;
-                }
-                setState(() {});
-              },
-            ),
-            const Spacer(
-              flex: 2,
-            ),
-            InkWell(
-              onTap: () async {
-                await BlocProvider.of<EditProfileCubit>(context).editProfile(
-                    aboutMe: aboutMe ?? widget.myabout,
-                    image: urlImage != null ? urlImage! : widget.myimage,
-                    userName: myName ?? widget.myname);
-                setState(() {});
-              },
-              child: isLoading == true
-                  ? Container(
-                      width: 320.w,
-                      height: 60.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: AppColor.kBlue,
-                      ),
-                      child: const Center(
-                          child: CircularProgressIndicator(
-                        color: Colors.white,
-                      )),
-                    )
-                  : const CustomButton(text: "Done"),
-            ),
-            const Spacer(),
-          ],
+            );
+          } else if (state is LogOutFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: AppColor.kBlue,
+                content: Text(
+                  state.errorMessage,
+                  style: const TextStyle(color: Colors.white),
+                )));
+            isLoadingLogOut = false;
+          }
+          setState(() {});
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Spacer(),
+              ProfileAppBar(
+                isLoading: isLoadingLogOut,
+              ),
+              const Spacer(),
+              ProfileImage(
+                image: urlImage != null ? urlImage! : widget.myimage,
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              TextButton(
+                onPressed: () => showImagePickerOption(context),
+                child: Text(
+                  "Edit",
+                  style: AppStyles.kStyleBlue16,
+                ),
+              ),
+              const Spacer(),
+              EmailField(
+                controller: controllerAboutMe,
+                hint: widget.myname,
+                onChanged: (name) {
+                  if (name.isNotEmpty) {
+                    myName = name;
+                  }
+                  setState(() {});
+                },
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              EmailField(
+                controller: controllerName,
+                hint: widget.myabout,
+                onChanged: (about) {
+                  if (about.isNotEmpty) {
+                    aboutMe = about;
+                  }
+                  setState(() {});
+                },
+              ),
+              const Spacer(
+                flex: 2,
+              ),
+              InkWell(
+                onTap: () async {
+                  await BlocProvider.of<EditProfileCubit>(context).editProfile(
+                      aboutMe: aboutMe ?? widget.myabout,
+                      image: urlImage != null ? urlImage! : widget.myimage,
+                      userName: myName ?? widget.myname);
+                  setState(() {});
+                },
+                child: isLoading == true
+                    ? Container(
+                        width: 320.w,
+                        height: 60.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: AppColor.kBlue,
+                        ),
+                        child: const Center(
+                            child: CircularProgressIndicator(
+                          color: Colors.white,
+                        )),
+                      )
+                    : const CustomButton(text: "Done"),
+              ),
+              const Spacer(),
+            ],
+          ),
         ),
       ),
     );

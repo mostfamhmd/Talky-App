@@ -1,3 +1,4 @@
+import 'package:chat_app/features/Home/presentation/manager/Log%20Out/log_out_cubit.dart';
 import 'package:chat_app/features/profile/presentation/manager/Edit%20Profile/edit_profile_cubit.dart';
 import 'package:chat_app/features/profile/presentation/view/widgets/profile_body.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,15 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => EditProfileCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => EditProfileCubit(),
+        ),
+        BlocProvider(
+          create: (context) => LogOutCubit(),
+        ),
+      ],
       child: Scaffold(
         body: ProfileBody(
           myname: myName,

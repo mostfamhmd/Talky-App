@@ -116,15 +116,13 @@ class _HomeBodyState extends State<HomeBody> {
 
                 if (snapshot.connectionState == ConnectionState.done) {
                   return HomeAppBar(
-                    isLoading: isLoadingLogOut,
                     userAbout: userMyAbout,
                     userName: userMyName,
                     userImage: urlMyImage,
                   );
                 }
 
-                return HomeAppBar(
-                  isLoading: isLoadingLogOut,
+                return const HomeAppBar(
                   userAbout: "None",
                   userName: "Flutter Developer",
                   userImage:

@@ -18,7 +18,7 @@ Future<void> notificationBackgroundHandler(RemoteMessage message) async {
   if (kDebugMode) {
     print(message.messageId);
   }
-
+  DateTime timeNotification = DateTime.now();
   FirebaseFirestore.instance
       .collection("Notifications")
       .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -26,6 +26,7 @@ Future<void> notificationBackgroundHandler(RemoteMessage message) async {
       .add({
     "Name": message.notification!.title,
     "Body": message.notification!.body,
+    "TimeNotification": timeNotification,
   });
 }
 

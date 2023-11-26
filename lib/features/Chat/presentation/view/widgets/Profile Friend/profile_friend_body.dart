@@ -1,5 +1,5 @@
 import 'package:chat_app/core/Utils/styles.dart';
-import 'package:chat_app/features/profile/presentation/view/widgets/profile_app_bar.dart';
+import 'package:chat_app/features/Chat/presentation/view/widgets/Profile%20Friend/profile_friend_app_bar.dart';
 import 'package:chat_app/features/profile/presentation/view/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +24,7 @@ class ProfileFriendBody extends StatelessWidget {
           SizedBox(
             height: 50.h,
           ),
-          const ProfileAppBar(),
+          const ProfileFriendAppBar(),
           const Spacer(),
           ProfileImage(
             image: friendImage,
